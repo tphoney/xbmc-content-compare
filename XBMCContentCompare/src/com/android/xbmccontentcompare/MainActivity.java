@@ -89,9 +89,9 @@ public class MainActivity extends Activity {
 			jObject = new JSONObject(googleResponse);
 			JSONObject result = jObject.getJSONObject("result");
 			
-			JSONArray productObject = result.getJSONArray("movies");
-			for (int i =0 ; i < productObject.length(); i++) {
-				addnewEntry(productObject.getJSONObject(i).getString("label"));
+			JSONArray movies = result.getJSONArray("movies");
+			for (int i =0 ; i < movies.length(); i++) {
+				addnewEntry(movies.getJSONObject(i).getString("label"));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
