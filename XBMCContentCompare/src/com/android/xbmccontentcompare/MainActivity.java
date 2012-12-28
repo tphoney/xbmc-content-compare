@@ -1,6 +1,7 @@
 package com.android.xbmccontentcompare;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,9 +19,11 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 
 	ArrayList<String> arraylist = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
+	VideoLibrary storedLibrary = new VideoLibrary();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		storedLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
 		// StrictMode.ThreadPolicy policy = new
 		// StrictMode.ThreadPolicy.Builder()
 		// .permitAll().build();
@@ -56,19 +59,27 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 	public void onRequestComplete(JSONObject result) {
 		JSONObject object;
 		if (null != result) {
+			VideoLibrary requestedLibrary = new VideoLibrary();
 			try {
 				object = result.getJSONObject("result");
-
 				JSONArray movies = object.getJSONArray("movies");
 				for (int i = 0; i < movies.length(); i++) {
-					addnewEntry(movies.getJSONObject(i).getString("label"));
+					// addnewEntry(movies.getJSONObject(i).getString("label"));
+					requestedLibrary.addMovie(new Movie(movies.getJSONObject(i)
+							.getString("label"), movies.getJSONObject(i)
+							.getString("imdbnumber")));
 				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			VideoLibrary duplicates = storedLibrary
+					.findDuplicates(requestedLibrary);
+			for (Movie bla : duplicates.movies) {
+				addnewEntry("duplicates: " + bla.name + ", " + bla.imdb);
+			}
+			
 		}
 
 	}
-
 }
