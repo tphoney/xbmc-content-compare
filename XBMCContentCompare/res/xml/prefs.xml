@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ <PreferenceCategory
+   android:summary="Home XBMC Configuration"
+   android:title="Home XBMC Configuration" >
+  <EditTextPreference
+     android:key="IP"
+     android:summary="Please enter your IP"
+     android:title="IP" />
+  <EditTextPreference
+     android:key="Port"
+     android:summary="Enter your port"
+     android:title="Port" />
+ </PreferenceCategory>
+
+</PreferenceScreen>
