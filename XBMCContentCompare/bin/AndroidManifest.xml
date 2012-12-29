@@ -25,8 +25,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.xbmccontentcompare.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:name=".PrefsActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar" >
         </activity>
     </application>
 
