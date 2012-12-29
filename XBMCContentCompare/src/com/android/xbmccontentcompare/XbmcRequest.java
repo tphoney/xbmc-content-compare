@@ -1,7 +1,5 @@
 package com.android.xbmccontentcompare;
 
-import java.util.ArrayList;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
@@ -18,17 +16,19 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 
 public class XbmcRequest extends AsyncTask<String, Void, JSONObject> {
-
-	final String url = "http://192.168.0.5:80/jsonrpc";
+	private MyCallbackInterface mCallback;
+	private String ip = "192.168.0.1";
+	private String port = "80";
 
 	public interface MyCallbackInterface {
 		public void onRequestComplete(JSONObject result);
 	}
 
-	private MyCallbackInterface mCallback;
 
-	public XbmcRequest(MyCallbackInterface callback) {
+	public XbmcRequest(MyCallbackInterface callback, String inputIp, String inputPort) {
 		mCallback = callback;
+		ip = inputIp;
+		port = inputPort;
 	}
 
 	@Override
@@ -44,10 +44,11 @@ public class XbmcRequest extends AsyncTask<String, Void, JSONObject> {
 
 	protected JSONObject getJSONFromXbmcMethod(final String... params) {
 		String httpResponseContents = "";
+		String requestUrl = "http://" + ip + ":" + port + "/jsonrpc";
 		if (params.length > 0) {
 			try {
 				HttpClient client = new DefaultHttpClient();
-				HttpPost httpPost = new HttpPost(url);
+				HttpPost httpPost = new HttpPost(requestUrl);
 				httpPost.addHeader("Content-Type", "application/json");
 				JSONObject jsonObjectPost = new JSONObject();
 				jsonObjectPost.put("jsonrpc", "2.0");

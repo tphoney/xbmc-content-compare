@@ -1,7 +1,6 @@
 package com.android.xbmccontentcompare;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,7 +8,9 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -25,6 +26,11 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		SharedPreferences prefs = PreferenceManager
+				    .getDefaultSharedPreferences(MainActivity.this);
+		String ip = prefs.getString("IP", "192.168.0.1");
+		String port = prefs.getString("Port", "80");
+
 		storedLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
 		// StrictMode.ThreadPolicy policy = new
 		// StrictMode.ThreadPolicy.Builder()
@@ -41,7 +47,7 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 		listview.setAdapter(adapter);
 
 		// getInfoFromProvider("");
-		XbmcRequest parser = new XbmcRequest(this);
+		XbmcRequest parser = new XbmcRequest(this, ip, port);
 		parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
 	}
 

@@ -6,11 +6,11 @@
   <EditTextPreference
      android:key="IP"
      android:summary="Please enter your IP"
-     android:title="IP" />
+     android:title="IP" android:defaultValue="192.168.0.5"/>
   <EditTextPreference
      android:key="Port"
      android:summary="Enter your port"
-     android:title="Port" />
+     android:title="Port" android:defaultValue="80"/>
  </PreferenceCategory>
 
 </PreferenceScreen>
