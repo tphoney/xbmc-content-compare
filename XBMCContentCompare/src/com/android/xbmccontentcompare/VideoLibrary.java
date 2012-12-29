@@ -1,13 +1,17 @@
 package com.android.xbmccontentcompare;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class VideoLibrary {
+public class VideoLibrary implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1321811786084352158L;
 	public Collection<Movie> movies;
 	
 	public VideoLibrary() {
-		// TODO Auto-generated constructor stub
 		movies = new ArrayList<Movie>();
 	}
 	
