@@ -1,6 +1,7 @@
 package com.android.xbmccontentcompare;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,18 +53,17 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-		switch (item.getItemId()) {
-		case R.id.menu_settings:
-			startActivity(new Intent(this, SettingsActivity.class));
-			return true;
-		}
+            switch (item.getItemId()) {
+            case R.id.menu_settings:
+                    startActivity(new Intent(this, PrefsActivity.class));
+                    return true;
+            }
 
-		return false;
+            return false;
 
-	}
-
+    }
 	public void addnewEntry(String entry) {
 		arraylist.add(0, entry);
 		adapter.notifyDataSetChanged();
@@ -92,7 +92,7 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 			for (Movie bla : duplicates.movies) {
 				addnewEntry("duplicates: " + bla.name + ", " + bla.imdb);
 			}
-
+			
 		}
 
 	}
