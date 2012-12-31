@@ -5,21 +5,43 @@
     tools:context=".MainActivity" >
 
     <CheckBox
-        android:id="@+id/checkBox1"
+        android:id="@+id/checkBoxHomeXBMC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:checked="false"
+        android:clickable="false"
         android:text="Home XBMC" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/checkBoxRemoteXBMC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/checkBox1"
+        android:layout_below="@+id/checkBoxHomeXBMC"
+        android:checked="false"
+        android:clickable="false"
         android:text="Remote XBMC" />
+
+    <Button
+        android:id="@+id/btnScanRemote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/checkBoxRemoteXBMC"
+        android:text="Scan Remote XBMC" />
+    
+    <Button
+        android:id="@+id/btnDuplicates"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/btnScanRemote"
+        android:text="Check For Duplicates" />
 
 </RelativeLayout>
