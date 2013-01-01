@@ -41,7 +41,18 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:enabled="false"
         android:layout_below="@+id/btnScanRemote"
         android:text="Check For Duplicates" />
+    
+    <Button
+        android:id="@+id/btnUniqueRemote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:enabled="false"
+        android:layout_below="@+id/btnDuplicates"
+        android:text="Show Unique Stuff on Remote XBMC" />
 
 </RelativeLayout>

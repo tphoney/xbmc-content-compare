@@ -20,12 +20,14 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int checkBox1=0x7f090001;
-        public static final int checkBox2=0x7f090002;
+        public static final int btnDuplicates=0x7f090004;
+        public static final int btnScanRemote=0x7f090003;
+        public static final int btnUniqueRemote=0x7f090005;
+        public static final int checkBoxHomeXBMC=0x7f090001;
+        public static final int checkBoxRemoteXBMC=0x7f090002;
         public static final int listResults=0x7f090000;
-        public static final int menu_duplicates=0x7f090005;
-        public static final int menu_scan_home=0x7f090004;
-        public static final int menu_settings=0x7f090003;
+        public static final int menu_scan_home=0x7f090007;
+        public static final int menu_settings=0x7f090006;
     }
     public static final class layout {
         public static final int activity_display_results=0x7f030000;

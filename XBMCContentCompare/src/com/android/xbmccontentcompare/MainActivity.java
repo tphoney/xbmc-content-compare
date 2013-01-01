@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 	String homePort;
 	Boolean homeRequest = true;
 	CheckBox homeXbmcStatus, remoteXbmcStatus;
-	Button btnDuplicates, btnScanRemote;
+	Button btnDuplicates, btnScanRemote, btnUniqueRemote;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,16 +38,31 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 		homeIp = prefs.getString("IP", "192.168.0.1");
 		homePort = prefs.getString("Port", "80");
 
-		// remoteLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
+		homeLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
+		homeLibrary.addMovie(new Movie("Unique_home", "t1t3234"));
+		
+		remoteLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
+		remoteLibrary.addMovie(new Movie("Unique_remote", "t1t"));
 		// ui work
 		homeXbmcStatus = (CheckBox) findViewById(R.id.checkBoxHomeXBMC);
 		remoteXbmcStatus = (CheckBox) findViewById(R.id.checkBoxRemoteXBMC);
 		btnDuplicates = (Button) findViewById(R.id.btnDuplicates);
+		btnUniqueRemote = (Button) findViewById(R.id.btnUniqueRemote);
 
 		// buttons and listeners = need to clean up
 		btnDuplicates.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				resultsLibrary = remoteLibrary.findDuplicates(homeLibrary);
+				Intent displayResultsIntent = new Intent(MainActivity.this,
+						DisplayResultsActivity.class);
+				displayResultsIntent.putExtra("VideoLibrary", resultsLibrary);
+				startActivity(displayResultsIntent);
+			}
+		});
+		
+		btnUniqueRemote.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				resultsLibrary = remoteLibrary.findUniques(homeLibrary);
 				Intent displayResultsIntent = new Intent(MainActivity.this,
 						DisplayResultsActivity.class);
 				displayResultsIntent.putExtra("VideoLibrary", resultsLibrary);
@@ -78,6 +93,10 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 			remoteXbmcStatus.setChecked(true);
 		} else {
 			remoteXbmcStatus.setChecked(false);
+		}
+		if (remoteLibrary.movies.size() > 0 && homeLibrary.movies.size() > 0) {
+			btnDuplicates.setEnabled(true);
+			btnUniqueRemote.setEnabled(true);
 		}
 	}
 
