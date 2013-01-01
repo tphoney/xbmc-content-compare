@@ -5,12 +5,23 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/menu_settings"/>
- 
     <item
         android:id="@+id/menu_scan_home"
         android:orderInCategory="200"
         android:showAsAction="never"
         android:title="@string/menu_scan_home">
+    </item>
+    <item
+        android:id="@+id/menu_scan_home_json"
+        android:orderInCategory="300"
+        android:showAsAction="never"
+        android:title="@string/menu_scan_home_json">
+    </item>
+    <item
+        android:id="@+id/menu_save_home"
+        android:orderInCategory="400"
+        android:showAsAction="never"
+        android:title="@string/menu_save_home">
     </item>
 
 </menu>

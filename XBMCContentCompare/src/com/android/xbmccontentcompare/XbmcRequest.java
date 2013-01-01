@@ -21,7 +21,7 @@ public class XbmcRequest extends AsyncTask<String, Void, JSONObject> {
 	private String port = "80";
 
 	public interface MyCallbackInterface {
-		public void onRequestComplete(JSONObject result);
+		public void onXbmcRequestComplete(JSONObject result);
 	}
 
 
@@ -39,7 +39,7 @@ public class XbmcRequest extends AsyncTask<String, Void, JSONObject> {
 	@Override
 	protected void onPostExecute(JSONObject result) {
 		// In here, call back to Activity or other listener that things are done
-		mCallback.onRequestComplete(result);
+		mCallback.onXbmcRequestComplete(result);
 	}
 
 	protected JSONObject getJSONFromXbmcMethod(final String... params) {

@@ -34,6 +34,7 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 	CheckBox homeXbmcStatus, remoteXbmcStatus;
 	Button btnDuplicates, btnScanRemote, btnUniqueRemote;
 	final int PICK_FILE_RESULT_CODE = 99;
+	final int TIME_TO_DISPLAY_MESSAGES = 5000;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +46,11 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 		homeIp = prefs.getString("IP", "192.168.0.1");
 		homePort = prefs.getString("Port", "80");
 
-		homeLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
-		homeLibrary.addMovie(new Movie("Unique_home", "t1t3234"));
+		// homeLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
+		// homeLibrary.addMovie(new Movie("Unique_home", "t1t3234"));
 
-		remoteLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
-		remoteLibrary.addMovie(new Movie("Unique_remote", "t1t"));
+		// remoteLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
+		// remoteLibrary.addMovie(new Movie("Unique_remote", "t1t"));
 		// ui work
 		homeXbmcStatus = (CheckBox) findViewById(R.id.checkBoxHomeXBMC);
 		remoteXbmcStatus = (CheckBox) findViewById(R.id.checkBoxRemoteXBMC);
@@ -154,12 +155,24 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 			XbmcRequest parser = new XbmcRequest(this, homeIp, homePort);
 			parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
 			return true;
+		case R.id.menu_scan_home_json:
+			homeRequest = true;
+			String file = android.os.Environment.getExternalStorageDirectory()
+					.getAbsolutePath()
+					+ "/XBMCContentCompare/"
+					+ getString(R.string.filename_home);
+			onXbmcRequestComplete(FileRequest.readJsonFromFile(file));
+			return true;
+		case R.id.menu_save_home:
+			FileRequest.writeToSDFile(homeLibrary.json,
+					getString(R.string.filename_home));
+			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void onRequestComplete(JSONObject result) {
+	public void onXbmcRequestComplete(JSONObject result) {
 		JSONObject objectToProcess;
 		VideoLibrary tmpLibrary = new VideoLibrary();
 		if (null != result) {
@@ -180,8 +193,9 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 					remoteLibrary.json = result;
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Toast.makeText(getBaseContext(),
+						"Unable to read the remote XBMC",
+						TIME_TO_DISPLAY_MESSAGES).show();
 			}
 		}
 		updateStatuses();
@@ -196,18 +210,17 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 		} catch (ActivityNotFoundException exp) {
 			Toast.makeText(getBaseContext(),
 					"No File (Manager / Explorer)etc Found In Your Device",
-					5000).show();
+					TIME_TO_DISPLAY_MESSAGES).show();
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		switch (requestCode) {
 		case PICK_FILE_RESULT_CODE:
 			if (resultCode == RESULT_OK) {
 				String FilePath = data.getData().getPath();
-				FileRequest.readJsonFromFile(FilePath);
+				onXbmcRequestComplete(FileRequest.readJsonFromFile(FilePath));
 			}
 			break;
 		}

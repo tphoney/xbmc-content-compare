@@ -39,11 +39,9 @@ public class FileRequest {
 	public static JSONObject readJsonFromFile(String fileTobeRead) {
 		JSONObject returnVal = null;
 		try {
-			File root = android.os.Environment.getExternalStorageDirectory();
-			File dir = new File(root.getAbsolutePath() + "/XBMCContentCompare");
+			File file = new File(fileTobeRead);
 
-			File yourFile = new File(dir.getAbsolutePath() + "/home.json");
-			FileInputStream stream = new FileInputStream(yourFile);
+			FileInputStream stream = new FileInputStream(file);
 			String jString = null;
 			try {
 				FileChannel fc = stream.getChannel();
