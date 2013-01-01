@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="retrieval_methods">
+        <item>Local File</item>
+        <item>Remote XBMC</item>
+    </array>
+
+</resources>

@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.json.JSONObject;
+
 public class VideoLibrary implements Serializable {
 
 	private static final long serialVersionUID = -1321811786084352158L;
 	public Collection<Movie> movies;
-	public String json;
+	public JSONObject json;
 
 	public VideoLibrary() {
 		movies = new ArrayList<Movie>();
