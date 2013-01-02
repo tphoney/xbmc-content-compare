@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <array name="retrieval_methods">
+    <array name="json_retrieval_methods">
         <item>Local File</item>
         <item>Remote XBMC</item>
     </array>
 
+    <array name="display_movie_options">
+        <item>Download Movie</item>
+        <item>View Movie Information</item>
+    </array>
 </resources>

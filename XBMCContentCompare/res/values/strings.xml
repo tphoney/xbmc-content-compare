@@ -3,7 +3,8 @@
 
     <string name="app_name">XBMC content compare</string>
     <string name="default_port">80</string>
-    <string name="default_ip">192.168.0.1</string>
+    <string name="default_ip">192.168.0.3</string>
+    <string name="default_time_to_display_messages">5000</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_duplicates">Show Duplicates</string>
     <string name="menu_scan_home">Scan Home Xbmc</string>

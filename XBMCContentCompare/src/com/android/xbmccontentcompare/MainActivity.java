@@ -86,7 +86,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 				AlertDialog.Builder builder = new AlertDialog.Builder(
 						MainActivity.this);
 				builder.setTitle("Make your selection");
-				builder.setItems(R.array.retrieval_methods,
+				builder.setItems(R.array.json_retrieval_methods,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int item) {
 								// Do something with the selection
@@ -104,10 +104,6 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 	public void decideImportMethod(final int selected) {
 		switch (selected) {
 		case 0:
-			// show file selection dialog
-			// File root = android.os.Environment.getExternalStorageDirectory();
-			// File dir = new File(root.getAbsolutePath() +
-			// "/XBMCContentCompare");
 			try {
 				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 				intent.setType("file/");
@@ -124,10 +120,6 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 			// show screen for inputing the remote xbmc information
 			DialogFragment dialog = new RemoteXbmcDialog();
 			dialog.show(getFragmentManager(), "NoticeDialogFragment");
-			// make request to remote xbmc
-			// XbmcRequest parser = new XbmcRequest(MainActivity.this,
-			// "192.168.0.3", homePort);
-			// parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
 			break;
 		default:
 			break;
@@ -210,7 +202,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 			} catch (JSONException e) {
 				Toast.makeText(getBaseContext(),
 						"Unable to read the remote XBMC",
-						TIME_TO_DISPLAY_MESSAGES).show();
+						R.string.default_time_to_display_messages).show();
 			}
 		}
 		updateStatuses();

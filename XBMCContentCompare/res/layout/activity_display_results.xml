@@ -5,7 +5,7 @@
     tools:context=".DisplayResultsActivity" >
 
     <ListView
-        android:id="@+id/listResults"
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
