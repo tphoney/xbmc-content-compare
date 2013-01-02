@@ -6,9 +6,10 @@ public class Movie implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public Movie(String inputName, String inputImdb) {
+	public Movie(String inputName, String inputImdb, String remoteUrl) {
 		this.name = inputName;
 		this.imdb = inputImdb;
+		this.remoteUrl = remoteUrl;
 	}
 
 	@Override
@@ -38,4 +39,5 @@ public class Movie implements Serializable {
 
 	public String name;
 	public String imdb;
+	public String remoteUrl;
 }

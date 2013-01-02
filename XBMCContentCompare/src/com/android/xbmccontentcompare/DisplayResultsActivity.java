@@ -1,5 +1,7 @@
 package com.android.xbmccontentcompare;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -53,7 +55,7 @@ public class DisplayResultsActivity extends Activity {
 	}
 
 	public void addnewEntry(String entry) {
-		arraylist.add( entry);
+		arraylist.add(entry);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -62,7 +64,7 @@ public class DisplayResultsActivity extends Activity {
 		final String itemClicked = (String) adapter.getItem(position);
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				DisplayResultsActivity.this);
-		builder.setTitle(itemClicked+":");
+		builder.setTitle(itemClicked + ":");
 		builder.setItems(R.array.display_movie_options,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog,
@@ -75,15 +77,22 @@ public class DisplayResultsActivity extends Activity {
 		alert.show();
 	}
 
-	public void decideWhattodoWithMovie(final int whatToDoWithMovie, int position) {
+	public void decideWhattodoWithMovie(final int whatToDoWithMovie,
+			int position) {
 		Movie movie = (Movie) bla.movies.toArray()[position];
 		switch (whatToDoWithMovie) {
 		case 0:
 			// download movie
-			 ;
-			Toast.makeText(getBaseContext(), "Downloading " + movie.name,
-					R.string.default_time_to_display_messages).show();
-			
+			try {
+				String url = "http://192.168.0.5/vfs/";
+				String encodedquery = URLEncoder.encode(movie.remoteUrl, "utf-8");
+				Intent browserIntentDownload = new Intent(Intent.ACTION_VIEW,
+						Uri.parse(url+encodedquery));
+				startActivity(browserIntentDownload);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+
 			break;
 
 		case 1:

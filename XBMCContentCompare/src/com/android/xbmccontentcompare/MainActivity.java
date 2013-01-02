@@ -160,7 +160,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		case R.id.menu_scan_home:
 			homeRequest = true;
 			XbmcRequest parser = new XbmcRequest(this, homeIp, homePort);
-			parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
+			parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber", "file");
 			return true;
 		case R.id.menu_scan_home_json:
 			homeRequest = true;
@@ -190,7 +190,8 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 					// addnewEntry(movies.getJSONObject(i).getString("label"));
 					tmpLibrary.addMovie(new Movie(movies.getJSONObject(i)
 							.getString("label"), movies.getJSONObject(i)
-							.getString("imdbnumber")));
+							.getString("imdbnumber"), movies.getJSONObject(i)
+							.getString("file")));
 				}
 				if (homeRequest) {
 					homeLibrary = tmpLibrary;
@@ -225,6 +226,6 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 			String ip, String port) {
 		// validate ip and port ????
 		XbmcRequest parser = new XbmcRequest(this, ip, port);
-		parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
+		parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber", "file");
 	}
 }
