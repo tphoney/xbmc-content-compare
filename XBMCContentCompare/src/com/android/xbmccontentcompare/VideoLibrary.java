@@ -35,4 +35,14 @@ public class VideoLibrary implements Serializable {
 	void addMovie(final Movie input) {
 		movies.add(input);
 	}
+	
+	public Movie findMovie(final String imdb) {
+		Movie returnVal = null;
+		for (Movie entry : this.movies) {
+			if (entry.imdb.equalsIgnoreCase(imdb)){
+				returnVal = entry;
+			}
+		}
+		return returnVal;
+	}
 }

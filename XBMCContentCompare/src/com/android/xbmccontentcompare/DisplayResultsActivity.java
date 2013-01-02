@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -18,6 +20,7 @@ public class DisplayResultsActivity extends Activity {
 
 	ArrayList<String> arraylist = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
+	private VideoLibrary bla;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +29,9 @@ public class DisplayResultsActivity extends Activity {
 		final ListView listView = (ListView) findViewById(R.id.list);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				onListItemClick(listView, arg1, arg2, arg3);
+			public void onItemClick(AdapterView<?> arg0, View view,
+					int position, long rowId) {
+				onListItemClick(listView, view, position, rowId);
 			}
 		});
 		// set up list view
@@ -36,10 +39,9 @@ public class DisplayResultsActivity extends Activity {
 				android.R.layout.simple_list_item_1, arraylist);
 		listView.setAdapter(adapter);
 
-		VideoLibrary bla = (VideoLibrary) getIntent().getSerializableExtra(
-				"VideoLibrary");
+		bla = (VideoLibrary) getIntent().getSerializableExtra("VideoLibrary");
 		for (Movie entry : bla.movies) {
-			addnewEntry(entry.name + ", " + entry.imdb);
+			addnewEntry(entry.name);
 		}
 	}
 
@@ -51,7 +53,7 @@ public class DisplayResultsActivity extends Activity {
 	}
 
 	public void addnewEntry(String entry) {
-		arraylist.add(0, entry);
+		arraylist.add( entry);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -60,29 +62,36 @@ public class DisplayResultsActivity extends Activity {
 		final String itemClicked = (String) adapter.getItem(position);
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				DisplayResultsActivity.this);
-		builder.setTitle("Make your selection");
+		builder.setTitle(itemClicked+":");
 		builder.setItems(R.array.display_movie_options,
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
+					public void onClick(DialogInterface dialog,
+							int whatToDoWithMovie) {
 						// Do something with the selection
-						decideImportMethod(item, itemClicked);
+						decideWhattodoWithMovie(whatToDoWithMovie, position);
 					}
 				});
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
 
-	public void decideImportMethod(final int selected, String movie) {
-		switch (selected) {
+	public void decideWhattodoWithMovie(final int whatToDoWithMovie, int position) {
+		Movie movie = (Movie) bla.movies.toArray()[position];
+		switch (whatToDoWithMovie) {
 		case 0:
 			// download movie
-			Toast.makeText(getBaseContext(),
-					"Downloading " + movie,
+			 ;
+			Toast.makeText(getBaseContext(), "Downloading " + movie.name,
 					R.string.default_time_to_display_messages).show();
+			
 			break;
 
 		case 1:
 			// view movie information
+			String url = "http://www.imdb.com/title/" + movie.imdb;
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(url));
+			startActivity(browserIntent);
 			break;
 		default:
 			break;
