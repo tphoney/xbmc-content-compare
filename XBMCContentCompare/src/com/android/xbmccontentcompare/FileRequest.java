@@ -35,7 +35,7 @@ public class FileRequest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static JSONObject readJsonFromFile(String fileTobeRead) {
 		JSONObject returnVal = null;
 		try {
@@ -60,5 +60,5 @@ public class FileRequest {
 		}
 		return returnVal;
 	}
-	
+
 }

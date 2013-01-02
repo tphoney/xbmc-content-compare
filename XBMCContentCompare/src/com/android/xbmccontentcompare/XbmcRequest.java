@@ -18,14 +18,14 @@ import android.os.AsyncTask;
 public class XbmcRequest extends AsyncTask<String, Void, JSONObject> {
 	private MyCallbackInterface mCallback;
 	private String ip = "192.168.0.1";
-	private String port = "80";
+	private String port =  "80";
 
 	public interface MyCallbackInterface {
 		public void onXbmcRequestComplete(JSONObject result);
 	}
 
-
-	public XbmcRequest(MyCallbackInterface callback, String inputIp, String inputPort) {
+	public XbmcRequest(MyCallbackInterface callback, String inputIp,
+			String inputPort) {
 		mCallback = callback;
 		ip = inputIp;
 		port = inputPort;
@@ -66,7 +66,8 @@ public class XbmcRequest extends AsyncTask<String, Void, JSONObject> {
 				}
 				jsonObjectPost.put("id", "1");
 
-				StringEntity stringEntity = new StringEntity(jsonObjectPost.toString());
+				StringEntity stringEntity = new StringEntity(
+						jsonObjectPost.toString());
 				stringEntity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
 						"application/json"));
 				httpPost.setEntity(stringEntity);
@@ -74,8 +75,8 @@ public class XbmcRequest extends AsyncTask<String, Void, JSONObject> {
 				HttpResponse res = client.execute(httpPost);
 
 				if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-					httpResponseContents = EntityUtils.toString(res.getEntity(),
-							"UTF-8");
+					httpResponseContents = EntityUtils.toString(
+							res.getEntity(), "UTF-8");
 				}
 
 			} catch (Exception e) {

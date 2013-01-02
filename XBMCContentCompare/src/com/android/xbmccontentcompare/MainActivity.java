@@ -1,13 +1,12 @@
 package com.android.xbmccontentcompare;
 
-import java.io.File;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,7 +22,8 @@ import android.widget.Toast;
 
 import com.android.xbmccontentcompare.XbmcRequest.MyCallbackInterface;
 
-public class MainActivity extends Activity implements MyCallbackInterface {
+public class MainActivity extends Activity implements MyCallbackInterface,
+		RemoteXbmcDialog.NoticeDialogListener {
 
 	VideoLibrary homeLibrary = new VideoLibrary();
 	VideoLibrary remoteLibrary = new VideoLibrary();
@@ -43,8 +43,8 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 				.getDefaultSharedPreferences(MainActivity.this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		homeIp = prefs.getString("IP", "192.168.0.1");
-		homePort = prefs.getString("Port", "80");
+		homeIp = prefs.getString("IP", getString(R.string.default_ip));
+		homePort = prefs.getString("Port", getString(R.string.default_port));
 
 		// homeLibrary.addMovie(new Movie("500 Days of Summer", "tt1022603"));
 		// homeLibrary.addMovie(new Movie("Unique_home", "t1t3234"));
@@ -56,6 +56,7 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 		remoteXbmcStatus = (CheckBox) findViewById(R.id.checkBoxRemoteXBMC);
 		btnDuplicates = (Button) findViewById(R.id.btnDuplicates);
 		btnUniqueRemote = (Button) findViewById(R.id.btnUniqueRemote);
+		btnScanRemote = (Button) findViewById(R.id.btnScanRemote);
 
 		// buttons and listeners = need to clean up
 		btnDuplicates.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +80,6 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 			}
 		});
 
-		btnScanRemote = (Button) findViewById(R.id.btnScanRemote);
 		btnScanRemote.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				homeRequest = false;
@@ -101,18 +101,33 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 		updateStatuses();
 	}
 
-	public void decideImportMethod(int selected) {
+	public void decideImportMethod(final int selected) {
 		switch (selected) {
 		case 0:
-			File root = android.os.Environment.getExternalStorageDirectory();
-			File dir = new File(root.getAbsolutePath() + "/XBMCContentCompare");
-			pickFile(dir);
+			// show file selection dialog
+			// File root = android.os.Environment.getExternalStorageDirectory();
+			// File dir = new File(root.getAbsolutePath() +
+			// "/XBMCContentCompare");
+			try {
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				intent.setType("file/");
+
+				startActivityForResult(intent, PICK_FILE_RESULT_CODE);
+			} catch (ActivityNotFoundException exp) {
+				Toast.makeText(getBaseContext(),
+						"No File (Manager / Explorer)etc Found In Your Device",
+						TIME_TO_DISPLAY_MESSAGES).show();
+			}
 			break;
 
 		case 1:
-			XbmcRequest parser = new XbmcRequest(MainActivity.this,
-					"192.168.0.3", homePort);
-			parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
+			// show screen for inputing the remote xbmc information
+			DialogFragment dialog = new RemoteXbmcDialog();
+			dialog.show(getFragmentManager(), "NoticeDialogFragment");
+			// make request to remote xbmc
+			// XbmcRequest parser = new XbmcRequest(MainActivity.this,
+			// "192.168.0.3", homePort);
+			// parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
 			break;
 		default:
 			break;
@@ -201,19 +216,6 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 		updateStatuses();
 	}
 
-	void pickFile(File aFile) {
-		try {
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.setType("file/");
-
-			startActivityForResult(intent, PICK_FILE_RESULT_CODE);
-		} catch (ActivityNotFoundException exp) {
-			Toast.makeText(getBaseContext(),
-					"No File (Manager / Explorer)etc Found In Your Device",
-					TIME_TO_DISPLAY_MESSAGES).show();
-		}
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
@@ -224,5 +226,13 @@ public class MainActivity extends Activity implements MyCallbackInterface {
 			}
 			break;
 		}
+	}
+
+	@Override
+	public void onRemoteXbmcDialogPositiveClick(DialogFragment dialog,
+			String ip, String port) {
+		// validate ip and port ????
+		XbmcRequest parser = new XbmcRequest(this, ip, port);
+		parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber");
 	}
 }
