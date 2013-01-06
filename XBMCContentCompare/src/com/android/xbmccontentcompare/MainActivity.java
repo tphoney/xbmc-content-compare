@@ -25,8 +25,8 @@ import com.android.xbmccontentcompare.XbmcRequest.MyCallbackInterface;
 public class MainActivity extends Activity implements MyCallbackInterface,
 		RemoteXbmcDialog.NoticeDialogListener {
 
-	VideoLibrary homeLibrary = new VideoLibrary();
-	VideoLibrary remoteLibrary = new VideoLibrary();
+	public VideoLibrary homeLibrary = new VideoLibrary();
+	public VideoLibrary remoteLibrary = new VideoLibrary();
 	public VideoLibrary resultsLibrary = new VideoLibrary();
 	String homeIp, remoteIp, homePort, remotePort;
 	Boolean homeRequest = true;
@@ -108,7 +108,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int item) {
 								// Do something with the selection
-								decideImportMethod(item);
+								decideRemoteImportMethod(item);
 							}
 						});
 				AlertDialog alert = builder.create();
@@ -119,7 +119,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		updateStatuses();
 	}
 
-	public void decideImportMethod(final int selected) {
+	public void decideRemoteImportMethod(final int selected) {
 		switch (selected) {
 		case 0:
 			// show screen for inputing the remote xbmc information
@@ -199,10 +199,13 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 					getString(R.string.filename_home));
 			return true;
 		case R.id.menu_display_home:
-			resultsLibrary = homeLibrary;
+			VideoLibrary tmpLibrary = new VideoLibrary();
+			tmpLibrary.ip = homeLibrary.ip;
+			tmpLibrary.port = homeLibrary.port;
+			tmpLibrary.movies = homeLibrary.movies;
 			Intent displayResultsIntent = new Intent(MainActivity.this,
 					DisplayResultsActivity.class);
-			displayResultsIntent.putExtra("VideoLibrary", resultsLibrary);
+			displayResultsIntent.putExtra("VideoLibrary", tmpLibrary);
 			startActivity(displayResultsIntent);
 			return true;
 		}
