@@ -28,11 +28,11 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 	VideoLibrary homeLibrary = new VideoLibrary();
 	VideoLibrary remoteLibrary = new VideoLibrary();
 	public VideoLibrary resultsLibrary = new VideoLibrary();
-	String homeIp;
-	String homePort;
+	String homeIp, remoteIp, homePort, remotePort;
 	Boolean homeRequest = true;
 	CheckBox homeXbmcStatus, remoteXbmcStatus;
-	Button btnDuplicates, btnScanRemote, btnUniqueRemote;
+	Button btnDuplicates, btnScanRemote, btnUniqueRemote, btnUniqueHome;
+	MenuItem scanHomeDir;
 	final int PICK_FILE_RESULT_CODE = 99;
 	final int TIME_TO_DISPLAY_MESSAGES = 5000;
 
@@ -56,12 +56,15 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		remoteXbmcStatus = (CheckBox) findViewById(R.id.checkBoxRemoteXBMC);
 		btnDuplicates = (Button) findViewById(R.id.btnDuplicates);
 		btnUniqueRemote = (Button) findViewById(R.id.btnUniqueRemote);
+		btnUniqueHome = (Button) findViewById(R.id.btnUniqueHome);
 		btnScanRemote = (Button) findViewById(R.id.btnScanRemote);
 
 		// buttons and listeners = need to clean up
 		btnDuplicates.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				resultsLibrary = remoteLibrary.findDuplicates(homeLibrary);
+				resultsLibrary.ip = remoteIp;
+				resultsLibrary.port = remotePort;
 				Intent displayResultsIntent = new Intent(MainActivity.this,
 						DisplayResultsActivity.class);
 				displayResultsIntent.putExtra("VideoLibrary", resultsLibrary);
@@ -72,6 +75,21 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		btnUniqueRemote.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				resultsLibrary = remoteLibrary.findUniques(homeLibrary);
+				resultsLibrary.ip = remoteIp;
+				resultsLibrary.port = remotePort;
+				Intent displayResultsIntent = new Intent(MainActivity.this,
+						DisplayResultsActivity.class);
+				displayResultsIntent.putExtra("VideoLibrary", resultsLibrary);
+				startActivity(displayResultsIntent);
+
+			}
+		});
+
+		btnUniqueHome.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				resultsLibrary = homeLibrary.findUniques(remoteLibrary);
+				resultsLibrary.ip = homeIp;
+				resultsLibrary.port = homePort;
 				Intent displayResultsIntent = new Intent(MainActivity.this,
 						DisplayResultsActivity.class);
 				displayResultsIntent.putExtra("VideoLibrary", resultsLibrary);
@@ -104,6 +122,12 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 	public void decideImportMethod(final int selected) {
 		switch (selected) {
 		case 0:
+			// show screen for inputing the remote xbmc information
+			DialogFragment dialog = new RemoteXbmcDialog();
+			dialog.show(getFragmentManager(), "NoticeDialogFragment");
+			break;
+		case 1:
+			//display file manager
 			try {
 				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 				intent.setType("file/");
@@ -116,11 +140,6 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 			}
 			break;
 
-		case 1:
-			// show screen for inputing the remote xbmc information
-			DialogFragment dialog = new RemoteXbmcDialog();
-			dialog.show(getFragmentManager(), "NoticeDialogFragment");
-			break;
 		default:
 			break;
 		}
@@ -129,8 +148,10 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 	private void updateStatuses() {
 		if (homeLibrary.movies.size() > 0) {
 			homeXbmcStatus.setChecked(true);
+			scanHomeDir.setEnabled(true);
 		} else {
 			homeXbmcStatus.setChecked(false);
+			// scanHomeDir.setEnabled(false);
 		}
 		if (remoteLibrary.movies.size() > 0) {
 			remoteXbmcStatus.setChecked(true);
@@ -140,6 +161,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		if (remoteLibrary.movies.size() > 0 && homeLibrary.movies.size() > 0) {
 			btnDuplicates.setEnabled(true);
 			btnUniqueRemote.setEnabled(true);
+			btnUniqueHome.setEnabled(true);
 		}
 	}
 
@@ -147,6 +169,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
+		scanHomeDir = menu.getItem(4);
 		return true;
 	}
 
@@ -160,7 +183,8 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		case R.id.menu_scan_home:
 			homeRequest = true;
 			XbmcRequest parser = new XbmcRequest(this, homeIp, homePort);
-			parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber", "file");
+			parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber",
+					"file");
 			return true;
 		case R.id.menu_scan_home_json:
 			homeRequest = true;
@@ -173,6 +197,13 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		case R.id.menu_save_home:
 			FileRequest.writeToSDFile(homeLibrary.json,
 					getString(R.string.filename_home));
+			return true;
+		case R.id.menu_display_home:
+			resultsLibrary = homeLibrary;
+			Intent displayResultsIntent = new Intent(MainActivity.this,
+					DisplayResultsActivity.class);
+			displayResultsIntent.putExtra("VideoLibrary", resultsLibrary);
+			startActivity(displayResultsIntent);
 			return true;
 		}
 		return false;
@@ -195,9 +226,13 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 				}
 				if (homeRequest) {
 					homeLibrary = tmpLibrary;
+					homeLibrary.ip = homeIp;
+					homeLibrary.port = homePort;
 					homeLibrary.json = result;
 				} else {
 					remoteLibrary = tmpLibrary;
+					remoteLibrary.ip = remoteIp;
+					remoteLibrary.port = remotePort;
 					remoteLibrary.json = result;
 				}
 			} catch (JSONException e) {
@@ -227,5 +262,7 @@ public class MainActivity extends Activity implements MyCallbackInterface,
 		// validate ip and port ????
 		XbmcRequest parser = new XbmcRequest(this, ip, port);
 		parser.execute("VideoLibrary.GetMovies", "title", "imdbnumber", "file");
+		remoteIp = ip;
+		remotePort = port;
 	}
 }

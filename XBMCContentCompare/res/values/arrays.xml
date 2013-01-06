@@ -2,12 +2,13 @@
 <resources>
 
     <array name="json_retrieval_methods">
-        <item>Local File</item>
         <item>Remote XBMC</item>
+        <item>Local File</item>
     </array>
 
     <array name="display_movie_options">
         <item>Download Movie</item>
+        <item>Stream Movie</item>
         <item>View Movie Information</item>
     </array>
 </resources>

@@ -10,6 +10,7 @@
     <string name="menu_scan_home">Scan Home Xbmc</string>
     <string name="menu_scan_home_json">Scan Home Xbmc from JSON</string>
     <string name="menu_save_home">Save Home Xbmc to JSON</string>
+    <string name="menu_display_home">Display Home Xbmc</string>
     <string name="title_activity_display_results">DisplayResultsActivity</string>
     <string name="filename_home">home.json</string>
 

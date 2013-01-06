@@ -11,6 +11,8 @@ public class VideoLibrary implements Serializable {
 	private static final long serialVersionUID = -1321811786084352158L;
 	public Collection<Movie> movies;
 	public JSONObject json;
+	public String ip = null;
+	public String port = null;
 
 	public VideoLibrary() {
 		movies = new ArrayList<Movie>();

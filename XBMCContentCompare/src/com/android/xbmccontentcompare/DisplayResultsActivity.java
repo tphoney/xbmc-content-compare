@@ -16,13 +16,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class DisplayResultsActivity extends Activity {
 
 	ArrayList<String> arraylist = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
-	private VideoLibrary bla;
+	private VideoLibrary library;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +40,8 @@ public class DisplayResultsActivity extends Activity {
 				android.R.layout.simple_list_item_1, arraylist);
 		listView.setAdapter(adapter);
 
-		bla = (VideoLibrary) getIntent().getSerializableExtra("VideoLibrary");
-		for (Movie entry : bla.movies) {
+		library = (VideoLibrary) getIntent().getSerializableExtra("VideoLibrary");
+		for (Movie entry : library.movies) {
 			addnewEntry(entry.name);
 		}
 	}
@@ -79,15 +78,30 @@ public class DisplayResultsActivity extends Activity {
 
 	public void decideWhattodoWithMovie(final int whatToDoWithMovie,
 			int position) {
-		Movie movie = (Movie) bla.movies.toArray()[position];
+		Movie movie = (Movie) library.movies.toArray()[position];
 		switch (whatToDoWithMovie) {
 		case 0:
 			// download movie
 			try {
-				String url = "http://192.168.0.5/vfs/";
-				String encodedquery = URLEncoder.encode(movie.remoteUrl, "utf-8");
+				String url = "http://" + library.ip + ":" + library.port + "/vfs/";
+				String encodedquery = URLEncoder.encode(movie.remoteUrl,
+						"utf-8");
 				Intent browserIntentDownload = new Intent(Intent.ACTION_VIEW,
-						Uri.parse(url+encodedquery));
+						Uri.parse(url + encodedquery));
+				startActivity(browserIntentDownload);
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+
+			break;
+		case 1:
+			// stream movie
+			try {
+				String url = "http://" + library.ip + ":" + library.port + "/vfs/";
+				String encodedquery = URLEncoder.encode(movie.remoteUrl,
+						"utf-8");
+				Intent browserIntentDownload = new Intent(Intent.ACTION_VIEW,
+						Uri.parse(url + encodedquery));
 				startActivity(browserIntentDownload);
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
@@ -95,7 +109,7 @@ public class DisplayResultsActivity extends Activity {
 
 			break;
 
-		case 1:
+		case 2:
 			// view movie information
 			String url = "http://www.imdb.com/title/" + movie.imdb;
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW,

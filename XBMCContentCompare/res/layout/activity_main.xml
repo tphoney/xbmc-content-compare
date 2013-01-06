@@ -54,5 +54,15 @@
         android:enabled="false"
         android:layout_below="@+id/btnDuplicates"
         android:text="Show Unique Stuff on Remote XBMC" />
+    
+     <Button
+        android:id="@+id/btnUniqueHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:enabled="false"
+        android:layout_below="@+id/btnUniqueRemote"
+        android:text="Show Unique Stuff on Home XBMC" />
 
 </RelativeLayout>
